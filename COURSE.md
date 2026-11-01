@@ -6,7 +6,7 @@ An English-language interactive teaching deck for the IEEE Zewail City Student B
 
 Open `index.html` directly, or run `npm run dev` and visit <http://localhost:4176/>. Use the arrow keys, footer arrows, or **Index** to move between slides. Click the highlighted controls inside each diagram to compare circuit states and waveform transformations. Each worked problem has a **Reveal the working** button so the class can attempt it first.
 
-The deck has 47 slides: one opening slide, 15 topic explanations, 30 individually worked problems, and a final 14-question concept check.
+The deck has 32 slides: one opening slide, 15 topic explanations, 15 practice slides with two independently revealable worked problems each, and a final 14-question concept check.
 
 ## Topic order
 

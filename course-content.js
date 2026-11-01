@@ -122,8 +122,7 @@ topics.splice(topics.findIndex(t=>t.id==='clamper'),0,{
 
 const slides = [{kind:'opening',short:'Opening',title:'Circuits, made visible'}, ...topics.flatMap(topic => [
   {kind:'lesson',topic,short:topic.short,title:topic.title},
-  {kind:'practice',topic,problemIndex:0,short:`${topic.short} · A`,title:`Worked problem A: ${topic.short}`},
-  {kind:'practice',topic,problemIndex:1,short:`${topic.short} · B`,title:`Worked problem B: ${topic.short}`},
+  {kind:'practice',topic,short:`${topic.short} · Practice`,title:`Two worked problems: ${topic.short}`},
 ]), {kind:'quiz',short:'Final check',title:'Prove the model'}];
 
 const finalQuiz = [

@@ -1,5 +1,5 @@
 Object.assign(settings,{loadE:5,fullMode:'bridge',fullView:'wave',filterC:1000,clipIdeal:false,clipPath:'series',clipPathView:'wave',seriesBiasModel:'ideal',clampViewCourse:'wave',biasedClampMode:'upper'});
-let problemOpen=false;
+let revealedProblems=new Set();
 
 function renderOpening() {
   return `<section class="opening" aria-label="Slide 1: Introduction">
@@ -18,22 +18,19 @@ function renderLesson(slide) {
       <aside class="course-explain"><div class="course-explain__top"><span>THE MODEL</span><strong>${esc(t.formula)}</strong></div>
         <div class="course-explain__steps">${t.points.map(([title,body],i)=>`<div class="course-step"><span>${pad(i+1)}</span><div><h3>${esc(title)}</h3><p>${esc(body)}</p></div></div>`).join('')}</div>
         <details class="presenter-cue"><summary>ASK THE ROOM</summary><p>${esc(t.insight)}</p></details>
-        <button class="panel-next" data-go="${current+1}" type="button">WORK PROBLEM A <span>↗</span></button></aside></div>
+        <button class="panel-next" data-go="${current+1}" type="button">WORK TWO PROBLEMS <span>↗</span></button></aside></div>
   </section>`;
 }
 
 function renderPractice(slide) {
-  const t=slide.topic,p=t.problems[slide.problemIndex],next=slide.problemIndex===0?'PROBLEM B':current===slides.length-2?'FINAL CHECK':'NEXT TOPIC';
-  return `<section class="course-practice workshop-slide" aria-label="${esc(t.short)}: worked problem ${slide.problemIndex+1}">
+  const t=slide.topic,next=current===slides.length-2?'FINAL CHECK':'NEXT TOPIC';
+  return `<section class="course-practice workshop-slide" aria-label="${esc(t.short)}: two worked problems">
     <div class="practice-head"><div class="lesson-head__number">${esc(t.group)} <span>/</span> ${esc(t.source)}</div>
-      <div class="practice-head__row"><div><h1>${problemOpen?'WORK IT THROUGH.':'STOP. PREDICT. SOLVE.'}</h1><p>${esc(t.short)} · Worked problem ${slide.problemIndex+1} of 2</p></div><div class="practice-formula">${esc(t.formula)}</div></div></div>
-    <div class="workshop-grid"><div class="workshop-question"><div class="practice-card__tag"><span>${esc(p.tag)}</span><strong>${pad(slide.problemIndex+1)} / 02</strong></div>
-      <h2>${esc(p.q)}</h2><div class="workshop-rule"></div><p class="workshop-prompt">Identify the model first. Then calculate. Can the answer be right from its units and waveform shape?</p>
-      <button class="practice-reveal" data-reveal="true" type="button">${problemOpen?'HIDE THE WORKING':'REVEAL THE WORKING'} <span>↗</span></button></div>
-      <div class="workshop-answer ${problemOpen?'is-open':''}"><div class="workshop-answer__top"><span>${problemOpen?'STEP-BY-STEP SOLUTION':'YOUR TURN'}</span><strong>IEEE EDUCATION</strong></div>
-        ${problemOpen?`<ol>${p.steps.map((step,i)=>`<li><span>${pad(i+1)}</span><p>${esc(step)}</p></li>`).join('')}</ol><div class="workshop-answer__result"><span>CHECKED RESULT</span><strong>${esc(p.answer)}</strong></div>`:
-        `<div class="workshop-answer__wait"><strong>?</strong><p>Pause here and ask the room for the first equation and the expected graph shape.</p></div>`}
-      </div></div>
+      <div class="practice-head__row"><div><h1>YOUR TURN.</h1><p>${esc(t.short)} · Two worked problems</p></div><div class="practice-formula">${esc(t.formula)}</div></div></div>
+    <div class="practice-grid">${t.problems.map((p,i)=>`<article class="practice-card"><div class="practice-card__tag"><span>${esc(p.tag)}</span><strong>${pad(i+1)} / 02</strong></div>
+      <h2>${esc(p.q)}</h2><div class="practice-solution" id="solution-${i}" ${revealedProblems.has(i)?'':'hidden'}><div class="practice-solution__caption">STEP-BY-STEP SOLUTION</div><ol>${p.steps.map(step=>`<li>${esc(step)}</li>`).join('')}</ol><div class="practice-answer"><span>CHECKED RESULT</span><strong>${esc(p.answer)}</strong></div></div>
+      ${revealedProblems.has(i)?'':`<div class="practice-pause"><span>?</span><p>Choose the model. Calculate. Check the units and the graph shape.</p></div>`}
+      <button class="practice-reveal" data-reveal="${i}" type="button" aria-expanded="${revealedProblems.has(i)}" aria-controls="solution-${i}">${revealedProblems.has(i)?'HIDE THE WORKING':'REVEAL THE WORKING'} <span>↗</span></button></article>`).join('')}</div>
     <div class="practice-bottom"><div><span>TEACHING CHECK</span><p>${esc(t.insight)}</p></div><button data-go="${current+1}" type="button">${next} <span>→</span></button></div>
   </section>`;
 }
@@ -58,7 +55,7 @@ function updateChrome() {
   $('#prev').disabled=current===0; $('#next').disabled=current===slides.length-1;
   $('.topbar__course').innerHTML=`<span class="topbar__pulse" aria-hidden="true"></span> TEAM EDUCATION <span class="topbar__slash">/</span> ${esc(slides[current].short).toUpperCase()}`;
   $$('.index-item').forEach((item,i)=>item.classList.toggle('is-current',i===current));
-  const topicIndex=Math.max(0,Math.floor((current-1)/3));
+  const topicIndex=Math.max(0,Math.floor((current-1)/2));
   $('#app').dataset.tone=current===0||current===slides.length-1?'deep':(['deep','blue','paper'][topicIndex%3]);
 }
 function render() {
@@ -73,7 +70,7 @@ function navigate(target){
   if(target===current){closeIndex();return;}
   if(moving){queued=target;return;}
   closeIndex();
-  const apply=()=>{current=target;problemOpen=false;render();};
+  const apply=()=>{current=target;revealedProblems.clear();render();};
   if(reducedMotion.matches){apply();return;}
   moving=true;const transition=$('#transition');transition.classList.remove('is-leaving');transition.classList.add('is-visible');
   setTimeout(()=>{apply();transition.classList.add('is-leaving');setTimeout(()=>{transition.classList.remove('is-visible','is-leaving');moving=false;if(queued!==null&&queued!==current){const next=queued;queued=null;navigate(next);}},440);},760);
@@ -89,7 +86,7 @@ document.addEventListener('click',event=>{
   if(button.id==='index-open'){const panel=$('#index');panel.inert=false;panel.setAttribute('aria-hidden','false');panel.classList.add('is-open');$('#index-close').focus();return;}
   if(button.id==='index-close'){closeIndex();$('#index-open').focus();return;}
   if(button.dataset.go!==undefined){navigate(Number(button.dataset.go));return;}
-  if(button.dataset.reveal){problemOpen=!problemOpen;render();return;}
+  if(button.dataset.reveal!==undefined){const index=Number(button.dataset.reveal);if(revealedProblems.has(index))revealedProblems.delete(index);else revealedProblems.add(index);render();return;}
   if(button.dataset.action){switch(button.dataset.action){
     case 'switch':settings.switchClosed=!settings.switchClosed;break;
     case 'full-bridge':settings.fullMode='bridge';break;

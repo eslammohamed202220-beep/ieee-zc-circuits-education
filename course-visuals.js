@@ -8,7 +8,7 @@ function waveBoard({eyebrow,title,input,output,inputZero=120,outputZero=311,inpu
   const inPath=tracePath(input,inputZero,inputScale), outPath=tracePath(output,outputZero,outputScale);
   const tickLabels='';
   const thresholdLine=threshold===null?'':`<path class="wave-threshold" d="M78 ${outputZero-threshold*outputScale} H700" /><text class="wave-annotation wave-annotation--gold" x="520" y="${outputZero-threshold*outputScale-7}">LIMIT ${threshold>=0?'+':''}${threshold.toFixed(1)} V</text>`;
-  const scan=reducedMotion.matches?'':`<line class="wave-playhead" x1="78" x2="78" y1="51" y2="367"><animate attributeName="x1" values="78;700" dur="6s" repeatCount="indefinite" /><animate attributeName="x2" values="78;700" dur="6s" repeatCount="indefinite" /></line>`;
+  const scan=reducedMotion.matches?'':`<line class="wave-playhead" x1="78" x2="78" y1="51" y2="367" />`;
   return `<div class="diagram-board"><div class="diagram-board__top"><span>${eyebrow}</span><strong>${title}</strong></div>
     <svg class="diagram-svg wave-svg" viewBox="0 0 760 390" role="img" aria-label="Synchronized input and output voltage waveforms">
       <path class="wave-grid" d="M78 49 H700 M78 ${inputZero} H700 M78 190 H700 M78 221 H700 M78 ${outputZero} H700 M78 368 H700 M78 49 V368 M233 49 V368 M389 49 V368 M544 49 V368 M700 49 V368" />

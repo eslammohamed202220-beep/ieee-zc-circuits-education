@@ -8,7 +8,7 @@ An interactive circuits and electronics teaching presentation for the IEEE Zewai
 
 ## What is inside
 
-- 47 slides covering 15 circuit topics, with 30 worked problems and a 14-question concept check.
+- 32 slides covering 15 circuit topics, with 30 worked problems in 15 practice slides and a 14-question concept check.
 - Animated current paths and waveform diagrams for diode circuits, rectifiers, filters, clippers, clampers, and a voltage multiplier.
 - Revealable problem solutions, circuit state controls, keyboard navigation, and a topic index.
 
