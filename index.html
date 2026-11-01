@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#071a2d" />
+  <meta name="description" content="IEEE ZC-SB Education Team — interactive circuits and electronics teaching deck." />
+  <title>Circuits, made visible — IEEE ZC-SB Education</title>
+  <link rel="preload" href="./fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./assets/ieee-zc-white.png" as="image" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./course.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <button class="brand" id="home" type="button" aria-label="Go to first slide"><img src="./assets/ieee-zc-white.png" alt="IEEE Zewail City Student Branch" /></button>
+      <div class="topbar__course"><span class="topbar__pulse" aria-hidden="true"></span> EDUCATION TEAM <span class="topbar__slash">/</span> CIE 110</div>
+      <button id="index-open" class="index-button" type="button">INDEX <span aria-hidden="true">↗</span></button>
+    </header>
+
+    <main class="stage" id="stage" aria-live="polite"></main>
+
+    <footer class="bottombar">
+      <div class="bottombar__identity">IEEE ZC-SB <span>·</span> EDUCATION</div>
+      <div class="progress"><span class="progress__rail"><span id="progress-fill" class="progress__fill"></span></span><span id="slide-count" class="progress__count">01 / 47</span></div>
+      <div class="nav-actions"><button id="prev" type="button" aria-label="Previous slide">←</button><button id="next" type="button" aria-label="Next slide">→</button></div>
+    </footer>
+
+    <div id="transition" class="transition" aria-hidden="true">
+      <div class="transition__word">FROM IDEA TO CURRENT</div>
+      <div class="transition__logo" aria-hidden="true"><img src="./assets/ieee-zc-white.png" alt="" /><img src="./assets/ieee-zc-white.png" alt="" /><img src="./assets/ieee-zc-white.png" alt="" /><img src="./assets/ieee-zc-white.png" alt="" /></div>
+    </div>
+
+    <div id="index" class="index" aria-hidden="true" inert>
+      <div class="index__header"><div><p>IEEE ZC-SB / EDUCATION</p><h2>Choose a concept.</h2></div><button id="index-close" type="button" aria-label="Close index">×</button></div>
+      <div class="index__grid" id="index-grid"></div>
+    </div>
+  </div>
+  <script defer src="./course-content.js"></script>
+  <script defer src="./course-base.js"></script>
+  <script defer src="./course-visuals.js"></script>
+  <script defer src="./course-ui.js"></script>
+</body>
+</html>
